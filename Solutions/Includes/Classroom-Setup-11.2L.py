@@ -100,7 +100,8 @@ UNION ALL TABLE beans;
 @DBAcademyHelper.monkey_patch
 def get_their_db(self, their_username):
     import re
-    schema_name_prefix = self.to_schema_name(username=their_username)
+    schema_name_prefix = self.to_schema_name(username=their_username, 
+                                             lesson_name=self.lesson_config.name)
     
 #     da_name, da_hash = self.get_username_hash(their_username)
 #     schema_name_prefix = f"da-{da_name}@{da_hash}-{self.course_code}"         # Composite all the values to create the "dirty" database name

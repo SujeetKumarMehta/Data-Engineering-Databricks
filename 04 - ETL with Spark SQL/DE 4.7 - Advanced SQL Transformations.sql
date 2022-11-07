@@ -330,7 +330,7 @@ SELECT * FROM transactions
 -- MAGIC 
 -- MAGIC Higher order functions include:
 -- MAGIC - **`FILTER`** filters an array using the given lambda function.
--- MAGIC - **`EXIST`** tests whether a statement is true for one or more elements in an array. 
+-- MAGIC - **`EXISTS`** tests whether a statement is true for one or more elements in an array. 
 -- MAGIC - **`TRANSFORM`** uses the given lambda function to transform all elements in an array.
 -- MAGIC - **`REDUCE`** takes two lambda functions to reduce the elements of an array to a single value by merging the elements into a buffer, and the apply a finishing function on the final buffer.
 
