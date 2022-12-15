@@ -88,10 +88,23 @@ instance_pool_id = DA.workspace.clusters.create_instance_pool()
 
 # COMMAND ----------
 
-DA.workspace.clusters.create_all_purpose_policy(instance_pool_id)
-DA.workspace.clusters.create_jobs_policy(instance_pool_id)
-DA.workspace.clusters.create_dlt_policy()
-None
+from dbacademy.dbhelper import ClustersHelper
+
+ClustersHelper.create_all_purpose_policy(client=DA.client, 
+                                         instance_pool_id=instance_pool_id, 
+                                         spark_version=None,
+                                         autotermination_minutes_max=180,
+                                         autotermination_minutes_default=120)
+
+ClustersHelper.create_jobs_policy(client=DA.client, 
+                                  instance_pool_id=instance_pool_id, 
+                                  spark_version=None)
+
+ClustersHelper.create_dlt_policy(client=DA.client, 
+                                 lab_id=WorkspaceHelper.get_lab_id(), 
+                                 workspace_description=WorkspaceHelper.get_workspace_description(),
+                                 workspace_name=WorkspaceHelper.get_workspace_name(), 
+                                 org_id=dbgems.get_org_id())
 
 # COMMAND ----------
 
@@ -104,7 +117,9 @@ None
 
 # COMMAND ----------
 
-DA.workspace.warehouses.create_shared_sql_warehouse(name="Starter Warehouse")
+from dbacademy.dbhelper.warehouses_helper_class import WarehousesHelper
+
+DA.workspace.warehouses.create_shared_sql_warehouse(name=WarehousesHelper.WAREHOUSES_DEFAULT_NAME)
 
 # COMMAND ----------
 
@@ -116,8 +131,8 @@ DA.workspace.warehouses.create_shared_sql_warehouse(name="Starter Warehouse")
 
 # COMMAND ----------
 
-DA.workspace.add_entitlement_workspace_access()
-DA.workspace.add_entitlement_databricks_sql_access()
+WorkspaceHelper.add_entitlement_workspace_access(client=DA.client)
+WorkspaceHelper.add_entitlement_databricks_sql_access(client=DA.client)
 
 # COMMAND ----------
 
@@ -130,12 +145,11 @@ DA.workspace.add_entitlement_databricks_sql_access()
 
 # COMMAND ----------
 
+from dbacademy.dbhelper.databases_helper_class import DatabasesHelper
+
 # Ensures that all users can create databases on the current catalog 
 # for cases wherein the user/student is not an admin.
-job_id = DA.workspace.databases.configure_permissions("Configure-Permissions")
-
-# COMMAND ----------
-
+job_id = DatabasesHelper.configure_permissions(DA.client, "Configure-Permissions", "10.4.x-scala2.12")
 DA.client.jobs().delete_by_id(job_id)
 
 # COMMAND ----------

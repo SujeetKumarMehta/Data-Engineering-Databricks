@@ -8,7 +8,8 @@ def get_dlt_policy(self):
     from dbacademy.dbhelper import ClustersHelper
 
     dlt_policy = DA.client.cluster_policies.get_by_name(ClustersHelper.POLICY_DLT_ONLY)
-    assert dlt_policy is not None, f"Could not find the cluster policy \"{ClustersHelper.POLICY_DLT_ONLY}\"; Please run the notebook Includes/Workspace-Setup before proceeding."
+    if dlt_policy is None:
+        dbgems.print_warning("WARNING: Policy Not Found", f"Could not find the cluster policy \"{ClustersHelper.POLICY_DLT_ONLY}\".\nPlease run the notebook Includes/Workspace-Setup to address this error.")
     
     return dlt_policy
 
@@ -68,20 +69,22 @@ def create_pipeline(self):
     # because some attributes are not mutable after creation.
     self.client.pipelines().delete_by_name(pipeline_name)
     
+    policy = self.get_dlt_policy()
+    if policy is None: cluster = [{"num_workers": 0}]
+    else:              cluster = [{"num_workers": 0, "policy_id": self.get_dlt_policy().get("policy_id")}]
+
     response = self.client.pipelines().create(
         name = pipeline_name, 
-        storage = DA.paths.storage_location, 
-        target = DA.schema_name, 
+        storage = self.paths.storage_location, 
+        target = self.schema_name, 
         notebooks = [path],
+        development = not self.is_smoke_test(), # When testing, use production
         configuration = {
             "source": DA.paths.stream_path,
             "spark.master": "local[*]",
             "datasets_path": DA.paths.datasets,
         },
-        clusters=[{ 
-            "num_workers": 0,
-            "policy_id": self.get_dlt_policy().get("policy_id")
-        }]
+        clusters=cluster
     )
     pipeline_id = response.get("pipeline_id")
     print(f"Created the pipeline \"{pipeline_name}\" ({pipeline_id})")
@@ -135,11 +138,15 @@ def validate_pipeline_config(self):
     assert num_workers == 0, f"Expected the number of workers to be 0, found {num_workers}."
 
     policy_id = cluster.get("policy_id")
-    policy_name = None if policy_id is None else self.client.cluster_policies.get_by_id(policy_id).get("name")
-    assert policy_id == self.get_dlt_policy().get("policy_id"), f"Expected the policy to be set to \"{ClustersHelper.POLICY_DLT_ONLY}\", found \"{policy_name}\"."
+    if policy_id is None:
+        dbgems.print_warning("WARNING: Policy Not Set", f"Expected the policy to be set to \"{ClustersHelper.POLICY_DLT_ONLY}\".")
+    else:
+        policy_name = self.client.cluster_policies.get_by_id(policy_id).get("name")
+        if policy_id != self.get_dlt_policy().get("policy_id"):
+            dbgems.print_warning("WARNING: Incorrect Policy", f"Expected the policy to be set to \"{ClustersHelper.POLICY_DLT_ONLY}\", found \"{policy_name}\".")
 
     development = spec.get("development")
-    assert development == True, f"The pipline mode should be set to \"Development\"."
+    assert development != self.is_smoke_test(), f"The pipline mode should be set to \"Development\"."
     
     channel = spec.get("channel")
     assert channel is None or channel == "CURRENT", f"Expected the channel to be Current but found {channel}."

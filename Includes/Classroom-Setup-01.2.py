@@ -22,7 +22,8 @@ lesson_config = LessonConfig(name = None,
                              create_catalog = False,
                              requires_uc = False,
                              installing_datasets = True,
-                             enable_streaming_support = True)
+                             enable_streaming_support = True,
+                             enable_ml_support = False)
 
 # COMMAND ----------
 

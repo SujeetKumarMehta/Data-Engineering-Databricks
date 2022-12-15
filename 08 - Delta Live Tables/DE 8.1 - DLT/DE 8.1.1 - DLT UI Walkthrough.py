@@ -63,7 +63,7 @@ DA.print_pipeline_config()
 # MAGIC 1. For **Notebook Libraries**, use the navigator to locate and select the notebook specified above.
 # MAGIC    * Even though this document is a standard Databricks Notebook, the SQL syntax is specialized to DLT table declarations.
 # MAGIC    * We will be exploring the syntax in the exercise that follows.
-# MAGIC 1. Under **Configuration**, add two configuration parameters:
+# MAGIC 1. Towards the bottom of the page, there is a drop down titled **Advanced**. Click on that, then:
 # MAGIC    * Click **Add configuration**, set the "key" to **spark.master** and the "value" to **local[\*]**.
 # MAGIC    * Click **Add configuration**, set the "key" to **datasets_path** and the "value" to the value provided in the cell above.
 # MAGIC 1. In the **Target** field, enter the database name provided in the cell above.<br/>

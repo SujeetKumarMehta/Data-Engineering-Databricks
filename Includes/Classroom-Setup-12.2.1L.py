@@ -121,11 +121,11 @@ def create_pipeline(self):
     
     response = self.client.pipelines().create(
         name = pipeline_name, 
-        storage = DA.paths.storage_location, 
-        target = DA.schema_name, 
+        storage = self.paths.storage_location, 
+        target = self.schema_name, 
         notebooks = [path],
         continuous = True,
-        development = self.is_smoke_test(), # When testing, don't use production
+        development = False,
         configuration = {
             "spark.master": "local[*]",
             "datasets_path": DA.paths.datasets,
@@ -195,7 +195,7 @@ def validate_pipeline_config(self):
     assert policy_id == self.get_dlt_policy().get("policy_id"), f"Expected the policy to be set to \"{ClustersHelper.POLICY_DLT_ONLY}\", found \"{policy_name}\"."
 
     development = spec.get("development")
-    assert development == self.is_smoke_test(), f"The pipline mode should be set to \"Production\"."
+    assert development == False, f"The pipline mode should be set to \"Production\"."
     
     channel = spec.get("channel")
     assert channel is None or channel == "CURRENT", f"Expected the channel to be Current but found {channel}."

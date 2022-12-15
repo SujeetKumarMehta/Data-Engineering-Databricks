@@ -99,22 +99,9 @@ UNION ALL TABLE beans;
 
 @DBAcademyHelper.monkey_patch
 def get_their_db(self, their_username):
-    import re
-    schema_name_prefix = self.to_schema_name(username=their_username, 
-                                             lesson_name=self.lesson_config.name)
-    
-#     da_name, da_hash = self.get_username_hash(their_username)
-#     schema_name_prefix = f"da-{da_name}@{da_hash}-{self.course_code}"         # Composite all the values to create the "dirty" database name
-#     while "__" in schema_name_prefix: 
-#         schema_name_prefix = self.schema_name_prefix.replace("__", "_")           # Replace all double underscores with single underscores
-
-    if DA.lesson_config.name is None: 
-      # No lesson, database name is the same as prefix
-      return schema_name_prefix                        
-    else:
-      # Database name includes the lesson name
-      return f"{schema_name_prefix}_{DA.lesson_config.clean_name}" 
-
+    return self.to_schema_name(username=their_username, 
+                               course_code=self.course_config.course_code,
+                               lesson_name=self.lesson_config.name)
 
 # COMMAND ----------
 

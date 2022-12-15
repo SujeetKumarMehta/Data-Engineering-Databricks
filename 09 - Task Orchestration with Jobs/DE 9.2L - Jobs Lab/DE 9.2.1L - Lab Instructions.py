@@ -68,7 +68,7 @@ DA.print_pipeline_config()
 # MAGIC 1. Leave **Product Edition** as **Advanced**.
 # MAGIC 1. Fill in a **Pipeline Name** - because these names must be unique, we suggest using the **Pipeline Name** provided in the cell above.
 # MAGIC 1. For **Notebook Libraries**, use the navigator to locate and select the notebook specified above.
-# MAGIC 1. Under **Configuration**, add three configuration parameters:
+# MAGIC 1. Towards the bottom of the page, there is a drop down titled **Advanced**. Click on that, then:
 # MAGIC    * Click **Add configuration**, set the "key" to **spark.master** and the "value" to **local[\*]**.
 # MAGIC    * Click **Add configuration**, set the "key" to **datasets_path** and the "value" to the value provided in the cell above.
 # MAGIC    * Click **Add configuration**, set the "key" to **source** and the "value" to the value provided in the cell above.
