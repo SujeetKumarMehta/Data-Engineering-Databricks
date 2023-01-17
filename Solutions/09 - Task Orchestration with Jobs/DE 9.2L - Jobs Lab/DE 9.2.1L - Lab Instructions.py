@@ -60,27 +60,31 @@ DA.print_pipeline_config()
 
 # MAGIC %md <i18n value="c8b235db-10cf-4a56-92d9-330b80da4f0f"/>
 # MAGIC 
-# MAGIC 
 # MAGIC Steps:
-# MAGIC 1. Click the **Workflows** button on the sidebar.
-# MAGIC 1. Select the **Delta Live Tables** tab.
-# MAGIC 1. Click **Create Pipeline**.
-# MAGIC 1. Leave **Product Edition** as **Advanced**.
-# MAGIC 1. Fill in a **Pipeline Name** - because these names must be unique, we suggest using the **Pipeline Name** provided in the cell above.
-# MAGIC 1. For **Notebook Libraries**, use the navigator to locate and select the notebook specified above.
-# MAGIC 1. Towards the bottom of the page, there is a drop down titled **Advanced**. Click on that, then:
-# MAGIC    * Click **Add configuration**, set the "key" to **spark.master** and the "value" to **local[\*]**.
-# MAGIC    * Click **Add configuration**, set the "key" to **datasets_path** and the "value" to the value provided in the cell above.
-# MAGIC    * Click **Add configuration**, set the "key" to **source** and the "value" to the value provided in the cell above.
-# MAGIC 1. In the **Target** field, enter the database name provided in the cell above.<br/>
-# MAGIC This should follow the pattern **`<name>_<hash>_dbacademy_dewd_jobs_lab_92`**
-# MAGIC 1. In the **Storage location** field, enter the path provided in the cell above.
-# MAGIC 1. For **Pipeline Mode**, select **Triggered**.
-# MAGIC 1. Uncheck the **Enable autoscaling** box.
-# MAGIC 1. Set the number of **`workers`** to **`0`** (zero).
-# MAGIC 1. Check the **Use Photon Acceleration** box.
-# MAGIC 1. For **Channel**, select **Current**
-# MAGIC 1. For **Policy**, select the value provided in the cell above.
+# MAGIC 1. Click the **Workflows** button on the sidebar, click the **Delta Live Tables** tab, and click **Create Pipeline**. 
+# MAGIC 2. Configure the pipeline settings specified below.
+# MAGIC 
+# MAGIC **NOTE:** You'll need the values provided in the cell output above to configure some of these settings.
+# MAGIC 
+# MAGIC | Setting | Instructions |
+# MAGIC |--|--|
+# MAGIC | Pipeline name | Enter the **Pipeline Name** provided above |
+# MAGIC | Product edition | Choose **Advanced** |
+# MAGIC | Pipeline mode | Choose **Triggered** |
+# MAGIC | Cluster policy | Choose the **Policy** provided above |
+# MAGIC | Notebook libraries | Use the navigator to select or enter the **Notebook Path** provided above |
+# MAGIC | Storage location | Enter the **Storage Location** provided above |
+# MAGIC | Target schema | Enter the **Target** database name provided above |
+# MAGIC | Cluster mode | Choose **Fixed size** to disable auto scaling for your cluster |
+# MAGIC | Workers | Enter **0** to use a Single Node cluster |
+# MAGIC | Photon Acceleration | Uncheck this checkbox to disable |
+# MAGIC | Configuration | Click **Advanced** to view additional settings<br>Click **Add Configuration** to input the **Key** and **Value** for row #1 in the table below<br>Click **Add Configuration** to input the **Key** and **Value** for row #2 in the table below |
+# MAGIC | Channel | Choose **Current** to use the current runtime version |
+# MAGIC 
+# MAGIC | Configuration | Key                 | Value                                      |
+# MAGIC | ------------- | ------------------- | ------------------------------------------ |
+# MAGIC | #1            | **`spark.master`**  | **`local[*]`**                             |
+# MAGIC | #2            | **`datasets_path`** | Enter the **Datasets Path** provided above |
 # MAGIC 
 # MAGIC Finally, click **Create**.
 # MAGIC 
@@ -118,8 +122,7 @@ DA.print_job_config()
 
 # MAGIC %md <i18n value="fab2a427-5d5a-4a82-8947-c809d815c2a3"/>
 # MAGIC 
-# MAGIC 
-# MAGIC Here, we'll start by scheduling the next notebook.
+# MAGIC Here, we'll start by scheduling the first notebook.
 # MAGIC 
 # MAGIC Steps:
 # MAGIC 1. Click the **Workflows** button on the sidebar
@@ -128,10 +131,11 @@ DA.print_job_config()
 # MAGIC 1. Configure the task:
 # MAGIC     1. Enter **Batch-Job** for the task name
 # MAGIC     1. For **Type**, select **Notebook**
-# MAGIC     1. For **Path**, select the **Batch Notebook Path** value provided in the cell above
+# MAGIC     1. For **Source**, select **Workspace**
+# MAGIC     1. For **Path**, specify the **Batch Notebook Path** value provided in the cell above
 # MAGIC     1. From the **Cluster** dropdown, under **Existing All Purpose Clusters**, select your cluster
 # MAGIC     1. Click **Create**
-# MAGIC 1. In the top-left of the screen, rename the job (not the task) from **`Batch-Job`** (the defaulted value) to the **Job Name** value provided in the cell above.
+# MAGIC 1. In the top-left of the screen, specify a name for the job (not the task) using the **`Batch-Job`** value provided in the cell above.
 # MAGIC 1. Click the blue **Run now** button in the top right to start the job.
 # MAGIC 
 # MAGIC <img src="https://files.training.databricks.com/images/icon_note_24.png"> **Note**: When selecting your all purpose cluster, you will get a warning about how this will be billed as all purpose compute. Production jobs should always be scheduled against new job clusters appropriately sized for the workload, as this is billed at a much lower rate.
@@ -152,7 +156,6 @@ DA.print_job_config()
 # MAGIC     1. Enter **DLT** for the task name
 # MAGIC     1. For **Type**, select  **Delta Live Tables pipeline**
 # MAGIC     1. For **Pipeline**, select the DLT pipeline you configured previously in this exercise<br/>
-# MAGIC     Note: The pipeline will start with **DLT-Job-Lab-92** and will end with your email address.
 # MAGIC     1. The **Depends on** field defaults to your previously defined task, **Batch-Job** - leave this value as-is.
 # MAGIC     1. Click the blue **Create task** button
 # MAGIC 
@@ -211,7 +214,7 @@ DA.start_job()
 # COMMAND ----------
 
 # MAGIC %md-sandbox
-# MAGIC &copy; 2022 Databricks, Inc. All rights reserved.<br/>
+# MAGIC &copy; 2023 Databricks, Inc. All rights reserved.<br/>
 # MAGIC Apache, Apache Spark, Spark and the Spark logo are trademarks of the <a href="https://www.apache.org/">Apache Software Foundation</a>.<br/>
 # MAGIC <br/>
 # MAGIC <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a> | <a href="https://help.databricks.com/">Support</a>

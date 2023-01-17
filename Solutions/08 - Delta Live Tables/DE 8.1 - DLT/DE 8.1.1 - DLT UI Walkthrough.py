@@ -50,44 +50,48 @@ DA.print_pipeline_config()
 
 # MAGIC %md <i18n value="71b010a3-80be-4909-9b44-6f68029f16c0"/>
 # MAGIC 
+# MAGIC ## Create Pipeline
 # MAGIC 
-# MAGIC ## Create and Configure a Pipeline
+# MAGIC In this section, you will create a pipeline using a notebook provided with the courseware. We'll explore the contents of the notebook in the following lesson.
 # MAGIC 
-# MAGIC In this section you will create a pipeline using a notebook provided with the courseware. We'll explore the contents of the notebook in the following lesson.
+# MAGIC Steps:
+# MAGIC 1. Click the **Workflows** button on the sidebar, click the **Delta Live Tables** tab, and click **Create Pipeline**. 
+# MAGIC 2. Configure the pipeline settings specified below.
 # MAGIC 
-# MAGIC 1. Click the **Workflows** button on the sidebar.
-# MAGIC 1. Select the **Delta Live Tables** tab.
-# MAGIC 1. Click **Create Pipeline**.
-# MAGIC 1. Leave **Product Edition** as **Advanced**.
-# MAGIC 1. Fill in a **Pipeline Name** - because these names must be unique, we suggest using the **Pipeline Name** provided in the cell above.
-# MAGIC 1. For **Notebook Libraries**, use the navigator to locate and select the notebook specified above.
-# MAGIC    * Even though this document is a standard Databricks Notebook, the SQL syntax is specialized to DLT table declarations.
-# MAGIC    * We will be exploring the syntax in the exercise that follows.
-# MAGIC 1. Towards the bottom of the page, there is a drop down titled **Advanced**. Click on that, then:
-# MAGIC    * Click **Add configuration**, set the "key" to **spark.master** and the "value" to **local[\*]**.
-# MAGIC    * Click **Add configuration**, set the "key" to **datasets_path** and the "value" to the value provided in the cell above.
-# MAGIC 1. In the **Target** field, enter the database name provided in the cell above.<br/>
-# MAGIC This should follow the pattern **`<name>_<hash>_dbacademy_dewd_dlt_demo_81`**
-# MAGIC    * This field is optional; if not specified, then tables will not be registered to a metastore, but will still be available in the DBFS. Refer to the <a href="https://docs.databricks.com/data-engineering/delta-live-tables/delta-live-tables-user-guide.html#publish-tables" target="_blank">documentation</a> for more information on this option.
-# MAGIC 1. In the **Storage location** field, enter the path provided in the cell above.
-# MAGIC    * This optional field allows the user to specify a location to store logs, tables, and other information related to pipeline execution. 
-# MAGIC    * If not specified, DLT will automatically generate a directory.
-# MAGIC 1. For **Pipeline Mode**, select **Triggered**.
-# MAGIC    * This field specifies how the pipeline will be run.
-# MAGIC    * **Triggered** pipelines run once and then shut down until the next manual or scheduled update.
-# MAGIC    * **Continuous** pipelines run continuously, ingesting new data as it arrives. Choose the mode based on latency and cost requirements.
-# MAGIC 1. Uncheck the **Enable autoscaling** box.
-# MAGIC 1. Set the number of **`workers`** to **`0`** (zero).
-# MAGIC    * Along with the **spark.master** config above, this will create a **Single Node** clusters.
-# MAGIC 1. Check the **Use Photon Acceleration** box.
-# MAGIC 1. For **Channel**, select **Current**
-# MAGIC 1. For **Policy**, select the value provided in the cell above.
+# MAGIC   **NOTE:** You'll need the values provided in the cell output above to configure some of these settings.
 # MAGIC 
-# MAGIC The fields **Enable autoscaling**, **Min Workers** and **Max Workers** control the worker configuration for the underlying cluster processing the pipeline. 
+# MAGIC | Setting | Instructions |
+# MAGIC |--|--|
+# MAGIC | Pipeline name | Enter the **Pipeline Name** provided above |
+# MAGIC | Product edition | Choose **Advanced** |
+# MAGIC | Pipeline mode | Choose **Triggered** |
+# MAGIC | Cluster policy | Choose the **Policy** provided above |
+# MAGIC | Notebook libraries | Use the navigator to select or enter the **Notebook Path** provided above |
+# MAGIC | Storage location | Enter the **Storage Location** provided above |
+# MAGIC | Target schema | Enter the **Target** database name provided above |
+# MAGIC | Cluster mode | Choose **Fixed size** to disable auto scaling for your cluster |
+# MAGIC | Workers | Enter **0** to use a Single Node cluster |
+# MAGIC | Photon Acceleration | Uncheck this checkbox to disable |
+# MAGIC | Configuration | Click **Advanced** to view additional settings<br>Click **Add Configuration** to input the **Key** and **Value** for row #1 in the table below<br>Click **Add Configuration** to input the **Key** and **Value** for row #2 in the table below |
+# MAGIC | Channel | Choose **Current** to use the current runtime version |
 # MAGIC 
-# MAGIC Notice the DBU estimate provided, similar to that provided when configuring interactive clusters.
+# MAGIC | Configuration | Key                 | Value                                      |
+# MAGIC | ------------- | ------------------- | ------------------------------------------ |
+# MAGIC | #1            | **`spark.master`**  | **`local[*]`**                             |
+# MAGIC | #2            | **`datasets_path`** | Enter the **Datasets Path** provided above |
 # MAGIC 
 # MAGIC Finally, click **Create**.
+# MAGIC 
+# MAGIC 
+# MAGIC A few notes on pipeline settings:
+# MAGIC 
+# MAGIC - **Pipeline mode** - This specifies how the pipeline will be run. Choose the mode based on latency and cost requirements.
+# MAGIC   - `Triggered` pipelines run once and then shut down until the next manual or scheduled update.
+# MAGIC   - `Continuous` pipelines run continuously, ingesting new data as it arrives.
+# MAGIC - **Notebook libraries** - Even though this document is a standard Databricks Notebook, the SQL syntax is specialized to DLT table declarations. We will be exploring the syntax in the exercise that follows.
+# MAGIC - **Storage location** - This optional field allows the user to specify a location to store logs, tables, and other information related to pipeline execution. If not specified, DLT will automatically generate a directory.
+# MAGIC - **Target** - If this optional field is not specified, tables will not be registered to a metastore, but will still be available in the DBFS. See <a href="https://docs.databricks.com/data-engineering/delta-live-tables/delta-live-tables-user-guide.html#publish-tables" target="_blank">documentation</a> for more information on this option.
+# MAGIC - **Cluster mode**, **Min Workers**, **Max Workers** - These fields control the worker configuration for the underlying cluster processing the pipeline. Here, we set the number of workers to 0. This works in conjunction with the **spark.master** parameter defined above to configure the cluster as a Single Node cluster.
 
 # COMMAND ----------
 
@@ -143,7 +147,7 @@ DA.start_pipeline()
 # COMMAND ----------
 
 # MAGIC %md-sandbox
-# MAGIC &copy; 2022 Databricks, Inc. All rights reserved.<br/>
+# MAGIC &copy; 2023 Databricks, Inc. All rights reserved.<br/>
 # MAGIC Apache, Apache Spark, Spark and the Spark logo are trademarks of the <a href="https://www.apache.org/">Apache Software Foundation</a>.<br/>
 # MAGIC <br/>
 # MAGIC <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a> | <a href="https://help.databricks.com/">Support</a>

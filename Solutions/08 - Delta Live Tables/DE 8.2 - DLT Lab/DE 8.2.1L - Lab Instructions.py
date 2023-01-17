@@ -90,25 +90,31 @@ DA.print_pipeline_config()
 # MAGIC 
 # MAGIC ## Create and Configure a Pipeline
 # MAGIC 
-# MAGIC 1. Click the **Workflows** button on the sidebar.
-# MAGIC 1. Select the **Delta Live Tables** tab.
-# MAGIC 1. Click **Create Pipeline**.
-# MAGIC 1. Leave **Product Edition** as **Advanced**.
-# MAGIC 1. Fill in a **Pipeline Name** - because these names must be unique, we suggest using the **Pipeline Name** provided in the cell above.
-# MAGIC 1. For **Notebook Libraries**, use the navigator to locate and select the notebook specified above.
-# MAGIC 1. Towards the bottom of the page, there is a drop down titled **Advanced**. Click on that, then:
-# MAGIC    * Click **Add configuration**, set the "key" to **spark.master** and the "value" to **local[\*]**.
-# MAGIC    * Click **Add configuration**, set the "key" to **datasets_path** and the "value" to the value provided in the cell above.
-# MAGIC    * Click **Add configuration**, set the "key" to **source** and the "value" to the value provided in the cell above.
-# MAGIC 1. In the **Target** field, enter the database name provided in the cell above.<br/>
-# MAGIC This should follow the pattern **`<name>_<hash>_dbacademy_dewd_dlt_lab_82`**
-# MAGIC 1. In the **Storage location** field, enter the path provided in the cell above.
-# MAGIC 1. For **Pipeline Mode**, select **Triggered**.
-# MAGIC 1. Uncheck the **Enable autoscaling** box.
-# MAGIC 1. Set the number of **`workers`** to **`0`** (zero).
-# MAGIC 1. Check the **Use Photon Acceleration** box.
-# MAGIC 1. For **Channel**, select **Current**
-# MAGIC 1. For **Policy**, select the value provided in the cell above.
+# MAGIC Steps:
+# MAGIC 1. Click the **Workflows** button on the sidebar, click the **Delta Live Tables** tab, and click **Create Pipeline**. 
+# MAGIC 2. Configure the pipeline settings specified below.
+# MAGIC 
+# MAGIC **NOTE:** You'll need the values provided in the cell output above to configure some of these settings.
+# MAGIC 
+# MAGIC | Setting | Instructions |
+# MAGIC |--|--|
+# MAGIC | Pipeline name | Enter the **Pipeline Name** provided above |
+# MAGIC | Product edition | Choose **Advanced** |
+# MAGIC | Pipeline mode | Choose **Triggered** |
+# MAGIC | Cluster policy | Choose the **Policy** provided above |
+# MAGIC | Notebook libraries | Use the navigator to select or enter the **Notebook Path** provided above |
+# MAGIC | Storage location | Enter the **Storage Location** provided above |
+# MAGIC | Target schema | Enter the **Target** database name provided above |
+# MAGIC | Cluster mode | Choose **Fixed size** to disable auto scaling for your cluster |
+# MAGIC | Workers | Enter **0** to use a Single Node cluster |
+# MAGIC | Photon Acceleration | Uncheck this checkbox to disable |
+# MAGIC | Configuration | Click **Advanced** to view additional settings<br>Click **Add Configuration** to input the **Key** and **Value** for row #1 in the table below<br>Click **Add Configuration** to input the **Key** and **Value** for row #2 in the table below |
+# MAGIC | Channel | Choose **Current** to use the current runtime version |
+# MAGIC 
+# MAGIC | Configuration | Key                 | Value                                      |
+# MAGIC | ------------- | ------------------- | ------------------------------------------ |
+# MAGIC | #1            | **`spark.master`**  | **`local[*]`**                             |
+# MAGIC | #2            | **`datasets_path`** | Enter the **Datasets Path** provided above |
 # MAGIC 
 # MAGIC Finally, click **Create**.
 
@@ -186,7 +192,7 @@ DA.start_pipeline()
 # COMMAND ----------
 
 # MAGIC %md-sandbox
-# MAGIC &copy; 2022 Databricks, Inc. All rights reserved.<br/>
+# MAGIC &copy; 2023 Databricks, Inc. All rights reserved.<br/>
 # MAGIC Apache, Apache Spark, Spark and the Spark logo are trademarks of the <a href="https://www.apache.org/">Apache Software Foundation</a>.<br/>
 # MAGIC <br/>
 # MAGIC <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a> | <a href="https://help.databricks.com/">Support</a>
