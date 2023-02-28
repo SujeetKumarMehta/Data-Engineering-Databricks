@@ -15,11 +15,11 @@
 # MAGIC The key changes this notebook makes includes:
 # MAGIC * Updating user-specific grants such that they can create databases/schemas against the current catalog when they are not workspace-admins.
 # MAGIC * Configures three cluster policies:
-# MAGIC     * **DBAcademy All-Purpose Policy** - which should be used on clusters running standard notebooks.
-# MAGIC     * **DBAcademy Jobs-Only Policy** - which should be used on workflows/jobs
-# MAGIC     * **DBAcademy DLT-Only Policy** - which should be used on DLT piplines (automatically applied)
-# MAGIC * Create or update the shared **Starter Warehouse** for use in Databricks SQL exercises
-# MAGIC * Create the Instance Pool **DBAcademy Pool** for use by students and the "student" and "jobs" policies.
+# MAGIC     * **DBAcademy** - which should be used on clusters running standard notebooks.
+# MAGIC     * **DBAcademy Jobs** - which should be used on workflows/jobs
+# MAGIC     * **DBAcademy DLT** - which should be used on DLT piplines (automatically applied)
+# MAGIC * Create or update the shared **DBAcademy Warehouse** for use in Databricks SQL exercises
+# MAGIC * Create the Instance Pool **DBAcademy** for use by students and the "student" and "jobs" policies.
 
 # COMMAND ----------
 
@@ -50,6 +50,9 @@ dbutils.widgets.text(WorkspaceHelper.PARAM_LAB_ID, "", "Lab/Class ID (optional)"
 # a general purpose description of the class
 dbutils.widgets.text(WorkspaceHelper.PARAM_DESCRIPTION, "", "Description (optional)")
 
+# The default spark version
+dbutils.widgets.text(WorkspaceHelper.PARAM_SPARK_VERSION, "11.3.x-cpu-ml-scala2.12", "Spark Version (optional)")
+
 # COMMAND ----------
 
 # MAGIC %md <i18n value="b1d39e1d-aa44-4c05-b378-837a1b432128"/>
@@ -70,6 +73,22 @@ DA.conclude_setup()
 
 # COMMAND ----------
 
+from dbacademy.dbhelper import ClustersHelper
+
+org_id = dbgems.get_org_id()
+lab_id = WorkspaceHelper.get_lab_id() or "UNKNOWN"
+spark_version = WorkspaceHelper.get_spark_version()
+workspace_name = WorkspaceHelper.get_workspace_name()
+workspace_description = WorkspaceHelper.get_workspace_description() or "UNKNOWN"
+
+print(f"org_id:                {org_id}")
+print(f"lab_id:                {lab_id}")
+print(f"spark_version:         {spark_version}")
+print(f"workspace_name:        {workspace_name}")
+print(f"workspace_description: {workspace_description}")
+
+# COMMAND ----------
+
 # MAGIC %md <i18n value="485ff12c-7286-4d14-a90e-3c29d87f8920"/>
 # MAGIC 
 # MAGIC ## Create Class Instance Pools
@@ -77,7 +96,11 @@ DA.conclude_setup()
 
 # COMMAND ----------
 
-instance_pool_id = DA.workspace.clusters.create_instance_pool()
+instance_pool_id = DA.workspace.clusters.create_instance_pool(preloaded_spark_version=spark_version,
+                                                              org_id=org_id, 
+                                                              lab_id=lab_id, 
+                                                              workspace_name=workspace_name, 
+                                                              workspace_description=workspace_description)
 
 # COMMAND ----------
 
@@ -88,23 +111,24 @@ instance_pool_id = DA.workspace.clusters.create_instance_pool()
 
 # COMMAND ----------
 
-from dbacademy.dbhelper import ClustersHelper
+# org_id, lab_id, workspace_name and workspace_description are attached to the
+# instance pool and as such, they are not attached to the all-purpose or jobs policies.
 
 ClustersHelper.create_all_purpose_policy(client=DA.client, 
                                          instance_pool_id=instance_pool_id, 
-                                         spark_version=None,
+                                         spark_version=spark_version,
                                          autotermination_minutes_max=180,
                                          autotermination_minutes_default=120)
 
 ClustersHelper.create_jobs_policy(client=DA.client, 
                                   instance_pool_id=instance_pool_id, 
-                                  spark_version=None)
+                                  spark_version=spark_version)
 
 ClustersHelper.create_dlt_policy(client=DA.client, 
-                                 lab_id=WorkspaceHelper.get_lab_id(), 
-                                 workspace_description=WorkspaceHelper.get_workspace_description(),
-                                 workspace_name=WorkspaceHelper.get_workspace_name(), 
-                                 org_id=dbgems.get_org_id())
+                                 org_id=org_id, 
+                                 lab_id=lab_id, 
+                                 workspace_name=workspace_name, 
+                                 workspace_description=workspace_description)
 
 # COMMAND ----------
 
@@ -150,6 +174,9 @@ from dbacademy.dbhelper.databases_helper_class import DatabasesHelper
 # Ensures that all users can create databases on the current catalog 
 # for cases wherein the user/student is not an admin.
 job_id = DatabasesHelper.configure_permissions(DA.client, "Configure-Permissions", "10.4.x-scala2.12")
+
+# COMMAND ----------
+
 DA.client.jobs().delete_by_id(job_id)
 
 # COMMAND ----------
